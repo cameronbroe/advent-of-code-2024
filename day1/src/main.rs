@@ -1,3 +1,8 @@
+use utils::load_input;
+
+const INPUT_FILE: &str = "inputs/day1.txt";
+
 fn main() {
-    println!("Hello, world!");
+    let input = load_input(INPUT_FILE.to_string());
+    println!("{}", input);
 }
