@@ -1,3 +1,4 @@
+use std::collections::HashMap;
 use utils::load_input;
 
 const INPUT_FILE_PART_ONE: &str = "inputs/day1.txt";
@@ -48,10 +49,32 @@ fn day1_part1(input: String) -> String {
     return sum.to_string();
 }
 
+fn day1_part2(input: String) -> String {
+    let parsed_input = parse_input(input);
+
+    let mut similiarity_score: i32 = 0;
+    let mut item_counts: HashMap<&i32, usize> = HashMap::new();
+    for item in parsed_input.left_list.iter() {
+        if item_counts.contains_key(item) {
+            let right_list_count = item_counts[item];
+            similiarity_score += item * (right_list_count as i32);
+        } else {
+            let right_list_clone = parsed_input.right_list.clone();
+            let right_list_count = right_list_clone.into_iter().filter(|x| x == item).count();
+            item_counts.insert(item, right_list_count);
+            similiarity_score += item * (right_list_count as i32);
+        }
+    }
+
+    return similiarity_score.to_string();
+}
+
 fn main() {
     let input = load_input(INPUT_FILE_PART_ONE.to_string());
-    let part1_output = day1_part1(input);
+    let part1_output = day1_part1(input.clone());
     println!("part 1: {}", part1_output);
+    let part2_output = day1_part2(input.clone());
+    println!("part 2: {}", part2_output);
 }
 
 #[cfg(test)]
@@ -65,5 +88,12 @@ mod tests {
         let input = load_input(SAMPLE_INPUT_FILE_PART_ONE.to_string());
         let output = day1_part1(input);
         assert_eq!(output.to_owned(), "11");
+    }
+
+    #[test]
+    fn day1_sample2_passes() {
+        let input = load_input(SAMPLE_INPUT_FILE_PART_ONE.to_string());
+        let output = day1_part2(input);
+        assert_eq!(output.to_owned(), "31");
     }
 }
